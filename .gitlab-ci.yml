@@ -1,0 +1,52 @@
+stages:
+  - prepare
+  - check
+  - generate
+  - clean
+
+variables:
+  GITLAB_DOMAIN: gitlab.com
+  IMAGE_PATH: anhtuan9702/buf-tools
+  IMAGE_TAG: 1.0.0
+  GO_GRPC_REPOSITORY: gookie/services/go-grpc
+
+
+prepare:bufbuild:
+  stage: prepare
+  image:
+    name: docker:stable
+  script:
+    - |
+      docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
+      docker push ${IMAGE_PATH}:${IMAGE_TAG}
+      echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
+
+generate:go-grpc:
+  stage: generate
+  image: ${IMAGE_PATH}:${IMAGE_TAG}
+  script:
+    - buf generate
+    - git clone https://${GITLAB_USER}:${GITLAB_PASSW}@${GITLAB_DOMAIN}/${GO_GRPC_REPOSITORY}.git go-grpc
+    - cd go-grpc
+    - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
+    - find . -mindepth 1 ! -regex '^./\.git\(/.*\)?'  -exec rm -rf {} +
+    - go mod init gitlab.com.vn/gookie/go-grpc
+    - cp -rf ../go-pb/* .
+    - go mod tidy
+    - git config --local user.name "Bot"
+    - git config --local user.email "bot@vpbanks.com.vn"
+    - git config --list --show-origin
+    - git add .
+    - git commit --allow-empty -m "Update generated codes - ${CI_COMMIT_SHORT_SHA}"
+    - git fetch --all
+    - git push -f origin $CI_COMMIT_BRANCH
+
+clean:remove-dev-branch:
+  stage: clean
+  script:
+    - export DEV_BRANCH=$(echo "${CI_COMMIT_MESSAGE}" | grep -oP "Merge branch '\K[^']+")
+    - echo "Branch to delete ${DEV_BRANCH}"
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: "manual"
+
