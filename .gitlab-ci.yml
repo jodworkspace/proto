@@ -6,7 +6,7 @@ stages:
 variables:
   IMAGE_PATH: anhtuan9702/buf-tools
   IMAGE_TAG: 1.0.0
-  GO_GRPC_REPOSITORY: gitlab.com/jodworkspace/protobuf/grpc-go
+  GO_GRPC_REPOSITORY: gitlab.com/jodworkspace/protobuf/go-grpc
 
 prepare:bufbuild:
   stage: prepare
