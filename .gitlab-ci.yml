@@ -1,14 +1,12 @@
 stages:
   - prepare
-  - check
   - generate
   - clean
 
 variables:
-  GITLAB_DOMAIN: gitlab.com
   IMAGE_PATH: anhtuan9702/buf-tools
   IMAGE_TAG: 1.0.0
-  GO_GRPC_REPOSITORY: jodworkspace/services/go-grpc
+  GO_GRPC_REPOSITORY: gitlab.com/jodworkspace/protobuf/grpc-go
 
 
 prepare:bufbuild:
@@ -16,17 +14,17 @@ prepare:bufbuild:
   image:
     name: docker:stable
   script:
-    - |
-      docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
-      docker push ${IMAGE_PATH}:${IMAGE_TAG}
-      echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
+    -  docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+    -  docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
+    -  docker push ${IMAGE_PATH}:${IMAGE_TAG}
+    -  echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
 
 generate:go-grpc:
   stage: generate
   image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
     - buf generate
-    - git clone https://${GITLAB_USER}:${GITLAB_PASSW}@${GITLAB_DOMAIN}/${GO_GRPC_REPOSITORY}.git go-grpc
+    - git clone https://${GITLAB_USER}:${GITLAB_PASSW}@${GO_GRPC_REPOSITORY}.git go-grpc
     - cd go-grpc
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
     - find . -mindepth 1 ! -regex '^./\.git\(/.*\)?'  -exec rm -rf {} +
