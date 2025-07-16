@@ -8,13 +8,12 @@ variables:
   IMAGE_TAG: 1.0.0
   GO_GRPC_REPOSITORY: gitlab.com/jodworkspace/protobuf/grpc-go
 
-
 prepare:bufbuild:
   stage: prepare
   image:
     name: docker:stable
   script:
-    -  docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+    -  echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
     -  docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
     -  docker push ${IMAGE_PATH}:${IMAGE_TAG}
     -  echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
