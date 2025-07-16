@@ -27,8 +27,8 @@ generate:go:
   image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
     - buf generate
-    - git clone https://${GITLAB_USER}:${GITLAB_PASSW}@${GO_GRPC_REPOSITORY}.git go-grpc
-    - cd go-grpc
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
+    - cd grpc-go
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
     - find . -mindepth 1 ! -regex '^./\.git\(/.*\)?'  -exec rm -rf {} +
     - go mod init gitlab.com/jodworkspace/protobuf/grpc-go
@@ -42,6 +42,7 @@ generate:go:
     - git fetch --all
     - git push -f origin $CI_COMMIT_BRANCH
   when: manual
+  allow_failure: false
 
 generate:python:
   stage: generate
@@ -53,9 +54,18 @@ generate:python:
 clean:remove-dev-branch:
   stage: clean
   script:
+    - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
+    - cd grpc-go
     - export DEV_BRANCH=$(echo "${CI_COMMIT_MESSAGE}" | grep -oP "Merge branch '\K[^']+")
     - echo "Branch to delete ${DEV_BRANCH}"
+    - |
+      if [ -z "${DEV_BRANCH}" ]; then
+        echo "Source branch not found in the commit message."
+      else
+        git push origin --delete ${DEV_BRANCH}
+      fi
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: "manual"
+  allow_failure: false
 
