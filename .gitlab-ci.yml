@@ -19,6 +19,8 @@ prepare:bufbuild:
     -  docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
     -  docker push ${IMAGE_PATH}:${IMAGE_TAG}
     -  echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
+  when: manual
+  allow_failure: true
 
 generate:go-grpc:
   stage: generate
@@ -39,6 +41,7 @@ generate:go-grpc:
     - git commit --allow-empty -m "Update generated codes - ${CI_COMMIT_SHORT_SHA}"
     - git fetch --all
     - git push -f origin $CI_COMMIT_BRANCH
+  when: manual
 
 clean:remove-dev-branch:
   stage: clean
