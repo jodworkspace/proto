@@ -6,7 +6,7 @@ managed:
     - path: validate/validate.proto
   override:
     - file_option: go_package_prefix
-      value: gitlab.com.vn/gookie
+      value: gitlab.com.vn/jodworkspace/protobuf
 plugins:
   - remote: buf.build/grpc/go:v1.5.1
     out: go-pb

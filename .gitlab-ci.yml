@@ -22,7 +22,7 @@ prepare:bufbuild:
   when: manual
   allow_failure: true
 
-generate:go-grpc:
+generate:go:
   stage: generate
   image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
@@ -31,7 +31,7 @@ generate:go-grpc:
     - cd go-grpc
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
     - find . -mindepth 1 ! -regex '^./\.git\(/.*\)?'  -exec rm -rf {} +
-    - go mod init gitlab.com/jodworkspace/go-grpc
+    - go mod init gitlab.com/jodworkspace/protobuf/grpc-go
     - cp -rf ../go-pb/* .
     - go mod tidy
     - git config --local user.name "GitLabCI"
@@ -41,6 +41,13 @@ generate:go-grpc:
     - git commit --allow-empty -m "Update generated codes - ${CI_COMMIT_SHORT_SHA}"
     - git fetch --all
     - git push -f origin $CI_COMMIT_BRANCH
+  when: manual
+
+generate:python:
+  stage: generate
+  image: ${IMAGE_PATH}:${IMAGE_TAG}
+  script:
+    - echo "TODO"
   when: manual
 
 clean:remove-dev-branch:
