@@ -27,7 +27,7 @@ generate:go:
   image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
     - buf generate
-    - git clone https://${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
+    - git clone https://${CI_DEPLOY_USER}:${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
     - cd grpc-go
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
     - find . -mindepth 1 ! -regex '^./\.git\(/.*\)?'  -exec rm -rf {} +
@@ -54,7 +54,7 @@ generate:python:
 clean:remove-dev-branch:
   stage: clean
   script:
-    - git clone https://${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
+    - git clone https://${CI_DEPLOY_USER}:${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
     - cd grpc-go
     - export DEV_BRANCH=$(echo "${CI_COMMIT_MESSAGE}" | grep -oP "Merge branch '\K[^']+")
     - echo "Branch to delete ${DEV_BRANCH}"
