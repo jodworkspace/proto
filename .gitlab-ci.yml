@@ -4,7 +4,6 @@ stages:
   - clean
 
 variables:
-  DOCKER_HUB: hub.docker.com
   IMAGE_PATH: anhtuan9702/buf-tools
   IMAGE_TAG: 1.0.0
   GO_GRPC_REPOSITORY: gitlab.com/jodworkspace/protobuf/grpc-go
@@ -16,7 +15,7 @@ prepare:bufbuild:
   services:
     - docker:28.3.2-dind
   script:
-    -  echo $DOCKER_PASSWORD | docker login $DOCKER_HUB --username $DOCKER_USERNAME --password-stdin 
+    -  echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin 
     -  docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
     -  docker push ${IMAGE_PATH}:${IMAGE_TAG}
     -  echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
