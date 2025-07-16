@@ -34,7 +34,7 @@ generate:go:
     - go mod init gitlab.com/jodworkspace/protobuf/grpc-go
     - cp -rf ../go-pb/* .
     - go mod tidy
-    - git config --local user.name "GitLabCI"
+    - git config --local user.name "GitLab-CI"
     - git config --local user.email "gitlab-ci@jodworkspace.auto"
     - git config --list --show-origin
     - git add .
@@ -62,6 +62,8 @@ clean:remove-dev-branch:
       if [ -z "${DEV_BRANCH}" ]; then
         echo "Source branch not found in the commit message."
       else
+        git config --local user.name "GitLab-CI"
+        git config --local user.email "gitlab-ci@jodworkspace.auto"
         git push origin --delete ${DEV_BRANCH}
       fi
   rules:
