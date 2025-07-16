@@ -13,8 +13,10 @@ prepare:bufbuild:
   stage: prepare
   image:
     name: docker:stable
+  services:
+    - docker:28.3.2-dind
   script:
-    -  echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin $DOCKER_HUB
+    -  echo $DOCKER_PASSWORD | docker login $DOCKER_HUB --username $DOCKER_USERNAME --password-stdin 
     -  docker build -t ${IMAGE_PATH}:${IMAGE_TAG} -f Dockerfile .
     -  docker push ${IMAGE_PATH}:${IMAGE_TAG}
     -  echo Pushed image ${IMAGE_PATH}:${IMAGE_TAG}
