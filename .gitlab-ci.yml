@@ -24,8 +24,10 @@ prepare:bufbuild:
 
 generate:go:
   stage: generate
-  image: ${IMAGE_PATH}:${IMAGE_TAG}
+  # image: ${IMAGE_PATH}:${IMAGE_TAG}
+  image: bufbuild/buf
   script:
+    - buf dep update
     - buf generate
     - git clone https://${CI_DEPLOY_USER}:${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
     - cd grpc-go
