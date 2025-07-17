@@ -24,11 +24,14 @@ prepare:bufbuild:
 
 generate:go:
   stage: generate
+  image:
+    name: docker:stable
   # image: ${IMAGE_PATH}:${IMAGE_TAG}
-  image: bufbuild/buf
   script:
-    - buf dep update
-    - buf generate
+    - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf dep update
+    - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf generate
+    # buf dep update
+    # buf generate
     - git clone https://${CI_DEPLOY_USER}:${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
     - cd grpc-go
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
