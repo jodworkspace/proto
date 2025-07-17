@@ -26,6 +26,8 @@ generate:go:
   stage: generate
   image:
     name: docker:stable
+  services:
+    - docker:28.3.2-dind
   # image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
     - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf dep update
