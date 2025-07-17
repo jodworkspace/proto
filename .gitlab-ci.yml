@@ -24,16 +24,17 @@ prepare:bufbuild:
 
 generate:go:
   stage: generate
-  image:
-    name: docker:stable
-  services:
-    - docker:28.3.2-dind
-  # image: ${IMAGE_PATH}:${IMAGE_TAG}
+  # image:
+  #   name: docker:stable
+  # services:
+  #   - docker:28.3.2-dind
+  image: ${IMAGE_PATH}:${IMAGE_TAG}
   script:
-    - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf dep update
-    - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf generate
-    # buf dep update
-    # buf generate
+    # DinD does not contain Git
+    # - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf dep update
+    # - docker run --volume "$(pwd):/workspace" --workdir /workspace bufbuild/buf generate
+    - buf dep update
+    - buf generate
     - git clone https://${CI_DEPLOY_USER}:${DEPLOY_TOKEN}@${GO_GRPC_REPOSITORY}.git grpc-go
     - cd grpc-go
     - git switch $CI_COMMIT_BRANCH || git switch -c $CI_COMMIT_BRANCH
