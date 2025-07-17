@@ -8,4 +8,4 @@ breaking:
   use:
     - FILE
 deps:
-  - buf.build/envoyproxy/protoc-gen-validate
+  - buf.build/bufbuild/protovalidate:v0.13.4
