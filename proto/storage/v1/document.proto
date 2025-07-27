@@ -10,7 +10,8 @@ service DocumentService {
 //  rpc CreateMetadata() returns () {}
 //  rpc UpdateMetadata() returns () {}
 //  rpc DeleteMetadata() returns () {}
-  rpc GetPreSignURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
+  rpc GetUploadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
+  rpc GetDownloadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
 }
 
 message GetAllDocumentRequest {
