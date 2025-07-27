@@ -7,11 +7,10 @@ import "google/protobuf/timestamp.proto";
 service DocumentService {
   rpc GetAllDocuments(GetAllDocumentRequest) returns (GetAllDocumentResponse) {}
   rpc GetMetadata(GetMetadataRequest) returns (GetMetadataResponse) {}
-  //  rpc CreateMetadata() returns () {}
-  //  rpc UpdateMetadata() returns () {}
-  //  rpc DeleteMetadata() returns () {}
-  rpc GetUploadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
-  rpc GetDownloadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
+//  rpc CreateMetadata() returns () {}
+//  rpc UpdateMetadata() returns () {}
+//  rpc DeleteMetadata() returns () {}
+  rpc GetPreSignURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
 }
 
 message GetAllDocumentRequest {
