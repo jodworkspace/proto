@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package document.v1;
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+
+service DocumentService {
+  rpc GetAllDocuments(GetAllDocumentRequest) returns (GetAllDocumentResponse) {}
+  rpc GetMetadata(GetMetadataRequest) returns (GetMetadataResponse) {}
+  //  rpc CreateMetadata() returns () {}
+  //  rpc UpdateMetadata() returns () {}
+  //  rpc DeleteMetadata() returns () {}
+  rpc GetUploadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
+  rpc GetDownloadURL(GetPreSignURLRequest) returns (GetPreSignURLResponse) {}
+}
+
+message GetAllDocumentRequest {
+  string owner_id = 1;
+  optional string extension = 2;
+}
+
+message GetAllDocumentResponse {
+  repeated GetMetadataResponse documents = 1;
+}
+
+message GetMetadataRequest {
+  string file_id = 1;
+}
+
+message GetMetadataResponse {
+  string file_id = 1;
+  string file_name = 2; // .md files
+  repeated string images = 3;
+  string owner_id = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message GetPreSignURLRequest {
+  string file_id = 1;
+}
+
+message GetPreSignURLResponse {
+  string file_id = 1;
+  string url = 2;
+}
